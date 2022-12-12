@@ -9,11 +9,13 @@ const typeDefs = `#graphql
 
 # This "Book" type defines the queryable fields for every book in our data source.
 type Book {
+  id: ID!
   title: String
   author: Author
 }
 
 type Author {
+  id: ID!
   name: String! # ! can't return null
   books: [Book] # This list can't be null AND its list *items* can't be null
 }
@@ -21,7 +23,9 @@ type Author {
 # clients can execute, along with the return type for each. In this
 # case, the "books" query returns an array of zero or more Books (defined above).
 type Query {
+  book(id: ID!): Book
   books: [Book]
+  author(id: ID!): Author
   authors: [Author]
 }
 `;
@@ -55,7 +59,13 @@ const authors = [
 const resolvers = {
   Query: {
     books: () => books,
+    book: (parent, args, contextValue, info) => {
+      return books.find(book => book.id == args.id)
+    },
     authors: () => authors,
+    author: (parent, args, contextValue, info) => {
+      return authors.find(author => author.id == args.id)
+    },
   },
 };
 
