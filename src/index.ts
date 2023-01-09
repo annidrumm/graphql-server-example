@@ -74,6 +74,16 @@ const resolvers = {
       return authors.find(author => author.id == args.id)
     },
   },
+  Book: {
+    author(parent) {
+      return authors.find(author => author.id == parent.author)
+    }
+  },
+  Author: {
+    books(parent) {
+      return books.filter(book => parent.books.includes(book.id))
+    },
+  }
 };
 
 // The ApolloServer constructor requires two parameters: your schema
